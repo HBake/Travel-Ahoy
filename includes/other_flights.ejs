@@ -1,0 +1,92 @@
+<table id="new-other-flights" class="table table-bordered">   
+    
+    <% flightData.forEach((offer, k) => { %>
+        <tr id="offer<%=`${k+1}`%>" class="offerInfo" style="text-align: center">
+
+            <%if (offer.isFastestTrip && offer.isCheapestTrip){%>
+                <td class = "display-on-load" colspan="0" ><%=`Cheapest and Fastest: (${currency}${offer.offerPrice}) (${Math.floor(offer.combinedTime/60)} Hours, ${Math.floor(offer.combinedTime)%60} Minutes)`%></td>
+                <td><input type="checkbox" checked name="group[]"></td>
+            <%}else if (offer.isFastestTrip){%>
+                <td colspan="0" ><%=`Fastest: (${currency}${offer.offerPrice}) (${Math.floor(offer.combinedTime/60)} Hours, ${Math.floor(offer.combinedTime)%60} Minutes)`%></td>
+                <td><input type="checkbox" name="group[]"></td>
+            <%}else if (offer.isCheapestTrip){%>
+                <td class = "display-on-load" colspan="0" ><%=`Cheapest: (${currency}${offer.offerPrice}) (${Math.floor(offer.combinedTime/60)} Hours, ${Math.floor(offer.combinedTime)%60} Minutes)`%></td>
+                <td><input type="checkbox" checked name="group[]"></td>
+            <%}else{%>
+                <td colspan="0" ><%=`Offer #${k + 1} (${currency}${offer.offerPrice}) (${Math.floor(offer.combinedTime/60)} Hours, ${Math.floor(offer.combinedTime)%60} Minutes)`%></td>
+                <td><input type="checkbox" name="group[]"></td>
+            <%}%>
+                
+        </tr>
+        
+        <tr>
+            <td>
+                <table class="table table-bordered dataTable"> <!-- table-hover -->
+
+                    <thead>
+                        <th>Flight</th>
+                        <th>Duration</th>
+                        <th>Segment</th>
+                        <th>Departure Locaiton</th>
+                        <th>Departure time</th>
+                        <th>Arrival location</th>
+                        <th>Arrival time</th>
+                        <th>Duration</th>
+                        <th>Airline</th>
+                    </thead>
+                
+                    <% offer.itineraries.forEach((itinerary, i) => { %>
+
+                        <% itinerary.segments.forEach((segment, j) => { %>
+
+                            <tr>
+                                <%if (j == 0){%>
+                                    <%if (i == 0) {%>
+                                        <td rowspan="<%=itinerary.segments.length%>"><%=`${whereFrom} -> ${whereTo}`%></td>
+                                    <%} else {%>
+                                        <td rowspan="<%=itinerary.segments.length%>"><%=`${whereTo} -> ${whereFrom}`%></td>
+                                    <%}%>
+                                    <td rowspan="<%=itinerary.segments.length%>"><%=`${Math.floor(itinerary.itineraryDuration/60)} Hours, ${Math.floor(itinerary.itineraryDuration)%60} Minutes`%></td>
+                                    
+                                <%}%>
+                                <td><%=`${j + 1}`%></td>
+                                <td><%=`${segment.departureAirportName}`%></td>
+                                <td><%=`${segment.departureDateTime.toLocaleString()}`%></td>
+                                <td><%=`${segment.arrivalAirportName}`%></td>
+                                <td><%=`${segment.arrivalDateTime.toLocaleString()}`%></td>
+                                <td><%=`${Math.floor(segment.segmentDuration/60)} Hours, ${Math.floor(segment.segmentDuration)%60} Minutes`%></td>
+                                <td><a href="<%=segment.carrierLink%>"><%=`${segment.segmentCarrierCode}`%></a></td>
+                            </tr>
+                        <% }); %>
+                    <% }); %>
+                </table>
+            </td>
+        </tr>
+
+    <% }) %>    
+
+</table>
+
+<script>
+    // $(".offerInfo").click(function() {
+    //     $(".offerInfo").next("tr").hide();
+    //     $(this).next("tr").toggle();
+    //     $('input[type="checkbox"]').on('change', function() {
+    //         $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+    //     });
+    // });
+
+    $(".offerInfo").next("tr").hide();
+
+    $(".display-on-load").parent().next("tr").show();
+
+    $('input[type="checkbox"]').on('change', function() {
+        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+        $(".offerInfo").next("tr").hide();
+        $(this).parent().parent().next("tr").toggle();
+        map.setLayoutProperty(lastVisible, 'visibility','none');
+        map.setLayoutProperty($(this).parent().parent().attr('id'), 'visibility','visible');
+        lastVisible = $(this).parent().parent().attr('id');
+    });
+
+</script>

@@ -1,0 +1,900 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+    <title>Travel Ahoy!</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+        crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" type="text/css" href="node_modules/nicecountryinput-master/niceCountryInput.css">
+    <script src="node_modules/nicecountryinput-master/niceCountryInput.js"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <script>
+        
+        var autocomplete;
+        var autocomplete2;
+        var input;
+        var input2;
+        
+
+        
+        function activatePlacesSearch(){
+            input = document.getElementById('WhereFrom');
+            autocomplete = new google.maps.places.Autocomplete(input);
+            input2 = document.getElementById('WhereTo');
+            autocomplete2 = new google.maps.places.Autocomplete(input2);
+        }
+
+
+        function showFlights(){
+            // document.getElementsByClassName('other-flights').style.display = "block"
+
+            if($(".other-flights").css("display") == "none") {
+                $(".other-flights").css("display", "table-row");
+            }
+            else {
+                $(".other-flights").css("display", "none");
+            }
+        }
+        
+        
+
+</script>
+
+</head>
+
+
+<body>
+
+    <style>
+
+        #line1, #line2, #line3, #line4, #line5, #line6, #line7, #line8 {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 1s linear alternate infinite;
+        }
+
+        .hidden_row {
+            display: none;
+        }
+
+        #markerPOI {
+            background-image: url('https://docs.mapbox.com/mapbox-gl-js/assets/washington-monument.jpg');
+            background-size: cover;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+ 
+        .mapboxgl-popup {
+            max-width: 400px;
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        }
+        #route2 {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 1s linear alternate infinite;
+        }
+
+        .btn-group button {
+            background-color: #4CAF50; /* Green background */
+            border: 1px solid green; /* Green border */
+            color: white; /* White text */
+            cursor: pointer; /* Pointer/hand icon */
+            float: left; /* Float the buttons side by side */
+        }
+
+        /* Clear floats (clearfix hack) */
+        .btn-group:after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        .btn-group button:not(:last-child) {
+            border-right: none; /* Prevent double borders */
+        }
+
+        /* Add a background color on hover */
+        .btn-group button:hover {
+            background-color: #3e8e41;
+        }
+
+        @keyframes dash {
+            from {
+                stroke-dashoffset: 1000;
+            }
+
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        body {
+            background-image: url("https://imgur.com/2e5DqO2.png");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            font-size: 110%;
+        }
+
+        #flights-display-table td,  #car-display-table td{
+            padding: 2%;
+            border: 1px solid;
+        }
+
+        .other-flights {
+            display: none
+        }
+        
+        #new-other-flights {
+            background-color: white;
+        }
+        #new-other-flights thead {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .canvasjs-chart-credit {
+            display: none;
+        }
+
+        .dataTable {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .dataTable td, .dataTable th {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .dataTable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+        .toggle-off.btn-lg {
+                padding-left: 0px;
+                padding-right: 0px;
+                background-color: lightgrey;
+            }
+        .toggle-on.btn-lg {
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader {
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            margin-top: -60px;
+            margin-left: -60px;
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid blue ;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            z-index: 1;
+        }
+    </style>
+
+
+    <!-- This is the where The actual website is being designed -->
+    <div class="container-fluid">
+        <!-- Loading Icon -->
+        <div id="loading" class="loader" style="display: none; z-index: 100000"></div>
+        <!-- First Row -->
+        <div class="row justify-content-center" style="padding-left: 5%; padding-right: 5%; padding-top: 2%; padding-bottom: 2%;">
+            <!--Row for header and Logo-->
+            <div class="row justify-content-lg-center" style="padding-bottom: 2%;">
+                <div class="col-lg-3">
+                    <a href="/">
+                        <img src=https://imgur.com/WWBP2zX.png alt="Travel Ahoy Logo"
+                            style="width: 100%; display: block; margin-left: auto; margin-right: auto;">
+                    </a>
+                </div>
+                <div class="col-lg-5 align-self-center">
+                    <h1 style="text-align: center;">Travel Ahoy<h1>
+                </div>
+            </div>
+
+            <div class="row w-100" id = "dark" style="background-color: rgba(245, 245, 230, 0.85); border-radius: 20px;">
+                <!-- This is the far left column -->
+                <div class="col-lg-9">
+                    <!-- First Row of Left Column: Info of: Where From, Where to, Country -->
+                    <form>
+                        <div class="form-row justify-content-center" style = "padding-top: 2%">
+                            <!-- Input box for starting desination -->
+                            <div class="col-lg-2">
+                                <div class="form-group mb-3">
+                                    <label for="WhereFrom">Where From:</label>
+                                    <input type="text" id="WhereFrom" class="form-control" aria-label="Default"
+                                        aria-describedby="inputGroup-sizing-default" value="<%=startAddress%>" title="The location you are traveling from.">
+                                </div>
+                            </div>
+                            
+                            <!-- Input box for ending destination -->
+                            <div class="col-lg-2">
+                                <div class="form-group mb-3">
+                                    <label for="WhereTo"> Where To:</label>
+                                    <input type="text" id="WhereTo" class="form-control" aria-label="Default"
+                                        aria-describedby="inputGroup-sizing-default" value="<%=endAddress%>" title="The location you are traveling to.">
+                                </div>
+                            </div>
+                            <!-- Input box for starting date -->
+                            <div class="col-lg-2">
+                                <div class="form-group mb-3">
+                                    <label for="StartDate">Start Date:</label>
+                                    <input type="date" id = "StartDate" class="form-control" aria-label="Default"
+                                        aria-describedby="inputGroup-sizing-default" value="<%=startDate%>" title="The date you plan to leave. (Please use calander)">
+                                </div>
+                            </div>
+                            <!-- Input box for ending date-->
+                            <div class="col-lg-2">
+                                <div class="form-group mb-3">
+                                    <label for="EndDate">End Date:</label>
+                                    <input type="date" id = "EndDate" class="form-control" aria-label="Default"
+                                        aria-describedby="inputGroup-sizing-default" value="<%=endDate%>" title="The date you plan to return. (Please use calander) If used, round trips will be used">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Second Row of Middle Column: Info of: Start Date, End Date, Max Traveler, Max Cost, and Currency -->
+                        <div class="form-row justify-content-center">
+                        
+                            <!-- Input box for number of travelers -->
+                            <div class="col-lg-3">
+                                <div class="from-group mb-3">
+                                    <label for="NumTravelers">Number of Travelers</label>
+                                    <input type="text" id= "NumTravelers"class="form-control" aria-label="Default"
+                                        aria-describedby="inputGroup-sizing-default" value="<%=numTravelers%>">
+                                </div>
+                            </div>
+                            <!-- Input box for currency selection -->
+                            <div class="col-lg-1">
+                                <div class="form-group mb-3">
+                                    <label for="Currency"> Currency </label>
+                                    <select class="custom-select" id="Currency" aria-label="Currency Select" >
+                                        <option value="€" <%=((currency == "€") ? "selected" : "")%>>€</option>
+                                        <option value="$" <%=((currency == "$") ? "selected" : "")%>>$</option>
+                                        <option value="£" <%=((currency == "£") ? "selected" : "")%>>£</option>
+                                        <option value="¥" <%=((currency == "¥") ? "selected" : "")%>>¥</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Button for submitting data -->
+                            <div class="col-lg-3 my-auto">
+                                
+                                <button id = "submitButton" type="button" class="btn btn-primary btn-lg btn-block" onclick=test(this)>
+                                    Submit
+                                </button>
+                                
+                            </div>
+                        </div>
+
+                        <!-- Third Row to allow Accessibility Option -->
+                        <div class="form-row justify-content-center" >
+                            <u><div id = "access-toggle" display > Accessibility Options</div></u>
+                        </div>
+                        <div id = "accessibility-tab" class="form-row justify-content-center" style="border-radius: 10px;">
+                            <!-- Allowing Accessibility -->
+                            <label id="access-option-1" style="padding-top: 0.5rem; padding-right: 5%;">
+                                <input id = "check1" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-size = "large" > Cognitive Disability Profile
+                            </label>
+
+                            <label id="access-option-2" style = "padding-left: 2%; padding-top: 0.5rem;">
+                                <input id = "check2" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-size = "large"> Dark Contrast Mode
+                            </label>
+
+                        </div>
+
+                        <!-- Fastest -->
+                        <div class="form-row">
+                            <div class="col-lg-12">
+                                <p style="padding-top: 1rem;">Driving info</p>
+                                <!-- <p> It would take <%= drivingTime %> to drive <%= drivingDistance %> miles and cost <%= `${currency}${drivingPrice}.` %></p> -->
+                                <table class="dataTable">
+                                    <tr>
+                                        <th>Price</th>
+                                        <th>Duration</th>
+                                        <th>Distance</th>
+                                    </tr>
+                                    <%if (gotDrivingInfo) {%>
+                                    <tr>
+                                        <td><%= `${currency}${drivingPrice}` %></td>
+                                        <td><%= drivingTime %></td>
+                                        <td><%= drivingDistance %> miles</td>
+                                    </tr>  
+                                    <%} else { %>
+
+                                    <tr>
+                                        <td colspan="0">No Driving data available</td>
+                                    </tr>
+
+                                    <%}%>
+                                </table>
+                                <!-- <p> It would take N/A seconds to boat</p> -->
+
+                            </div>
+                        </div>
+                        <!-- Cheapest -->
+                        <div class="form-row">
+                            <div class="col-lg-12">
+                                <p style="padding-top: 1rem;">Flight options</p>
+                                <%-include('includes/other_flights', {})%>  
+                            </div>
+                        </div>
+                        <!-- Map -->
+                        <div class="form-row" style="padding-top: 2%">
+                            <div class="col-lg-12">
+                                <div id='map' style='width: 100%; height: 400px; border-radius: 10px'></div>
+                                <script>
+                                    var lastVisible = "offer1"
+                                    mapboxgl.accessToken = 'pk.eyJ1IjoiYWFyaXNoMTMiLCJhIjoiY2tuOWt6a3QyMTh3bDMxcGhhNDhrMXZuaiJ9.PE9GONmYF7nBXJgX4wnwvw';
+
+                                    var map = new mapboxgl.Map({
+                                        container: 'map',
+                                        style: 'mapbox://styles/mapbox/streets-v9',
+                                        center: [<%= mapCoordinates[0] %>],
+                                        zoom: 6
+                                    });
+                           
+
+
+                                    map.on('load', function () {
+                                        map.resize();
+
+                                        <%if (gotDrivingInfo) {%>
+                                        map.addSource('route', {
+                                            'type': 'geojson',
+                                            'data': {
+                                                'type': 'Feature',
+                                                'properties': {},
+                                                'geometry': {
+                                                    'type': 'LineString',
+                                                    'coordinates':
+                                                        //  mapCoordinates
+                                                        <%- JSON.stringify(mapCoordinates) %> 
+                                                }
+                                            }
+                                        })
+                                        <%}%>
+                                        
+                                        console.log([<%= mapCoordinates[0] %>],
+                                                            [<%= mapCoordinates[mapCoordinates.length - 1] %>]);
+                                        map.addLayer({
+                                            'id': 'route',
+                                            'type': 'line',
+                                            'source': 'route',
+                                            'layout': {
+                                                'line-join': 'round',
+                                                'line-cap': 'round'
+                                            },
+                                            'paint': {
+                                                'line-color': '#888',
+                                                'line-width': 8
+                                            }
+                                        });
+
+                                        
+
+                                        var markerStart = new mapboxgl.Marker({
+                                            color: "#FFFFFF",
+                                            draggable: false
+                                        }).setLngLat([<%= mapCoordinates[0] %>])
+                                            .addTo(map);
+                                        var markerEnd = new mapboxgl.Marker({
+                                            color: "#FFFFFF",
+                                            draggable: false
+                                        }).setLngLat([<%= mapCoordinates[mapCoordinates.length - 1] %>])
+                                            .addTo(map);
+
+                                        // map.addLayer({
+                                        //     "id": "route2",
+                                        //     "type": "line",
+
+                                        //     "source": {
+                                        //         "type": "geojson",
+                                        //         "data": {
+                                        //             "type": "Feature",
+                                        //             "properties": {},
+                                        //             "geometry": {
+                                        //                 "type": "LineString",
+                                        //                 "coordinates": [
+                                        //                     // [-122.414, 37.776],
+                                        //                     // [-77.032, 38.913]
+                                        //                     [<%= mapCoordinates[0] %>],
+                                        //                     [<%= mapCoordinates[mapCoordinates.length - 1] %>]
+                                        //                 ]
+                                        //             }
+                                        //         }
+                                        //     }
+                                        // });
+
+                                        <%flightData.forEach((offer, offerNum) => {%>
+                                            map.addLayer({
+                                                "id": "<%=`offer${offerNum+1}`%>",
+                                                "type": "line",
+                                                "layout": {'visibility': '<%-offerNum == 0? 'visible' : 'none'%>'},
+
+                                                "source": {
+                                                    "type": "geojson",
+                                                    "data": {
+                                                        "type": "Feature",
+                                                        "properties": {},
+                                                        "geometry": {
+                                                            "type": "LineString",
+                                                            "coordinates": <%-JSON.stringify(offer.offerCoords)%>
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        <% }); %>
+
+
+                                    });
+                                    function expandMap() {
+                                        console.log("expand")
+                                        if($("#map").height() == 800) {
+                                            $("#map").height(400)
+                                            $("#expandIcon").attr("src","https://useiconic.com/open-iconic/svg/fullscreen-enter.svg")
+                                        }
+                                        else {
+                                            $("#map").height(800)
+                                            $("#expandIcon").attr("src","https://useiconic.com/open-iconic/svg/fullscreen-exit.svg")
+                                        }
+                                        map.resize();
+                                    }
+                                </script> 
+
+                                <div class="button" style="z-index: 1; position: absolute; bottom: 10px; right: 10px; width: 50px; height: 50px;" onclick="expandMap()"><img src="https://useiconic.com/open-iconic/svg/fullscreen-enter.svg" style="width: 100%; height: 100%;" id="expandIcon"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            
+                <!-- This is the right column -->
+                <div class="col-lg-3 border-left border-dark">
+                    <div class="row justify-content-center" style="padding: 2%;">
+                        <div class="btn-group" style ="padding-top: 0.5rem" role="group" aria-label="Basic example">
+                            <button type="button" id = "WeatherBox" class="btn btn-secondary">Weather</button>
+                            <button type="button" id = "CovidBox" class="btn btn-secondary">Covid</button>
+                            <button type="button" id = "NewsBox" class="btn btn-secondary">News</button>
+                            <button type="button" id = "POIBox" class="btn btn-secondary">POIs</button>
+                        </div>
+
+                        <div class = "container justify-content-center overflow-auto" id = "WeatherData" style = "max-height: 1240px;" >
+                            <div class="row justify-content-center">
+                                <h4 style="text-align: center; padding-top: 1rem;"> 7 Day Weather Forecast</h4>  
+                            </div>
+                            <div class="row justify-content-center">
+                                <h7> <%=`${whereTo}, ${endCountryName}`%></h7>
+                            </div>
+                            <br>
+
+                            <% for( let i = 0; i < weatherData.length; i++ ) { %>
+                                <div class="container border border-secondary">
+                                    <div class="row justify-content-center">
+                                        <p style="text-align: center;"><%=(new Date(parseInt(weatherData[i].dt)* 1000)).toDateString()%></p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <img src= "<%= `http://openweathermap.org/img/wn/${weatherData[i].weather[0].icon}@2x.png` %>" alt="Weather"
+                                            style="display: block; background-color: rgb(155, 155, 155); border-radius: 5px;">
+                                            <p style="text-align: center;"><%=weatherData[i].weather[0].description%></p>
+                                        </div>
+                                        <div class="col-sm">
+                                            <p>Max temp: <%= weatherData[i].temp.max %>°F</p>
+                                            <p>Min temp: <%= weatherData[i].temp.min %>°F</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            <% } %>
+                        </div>
+
+                        <div class = "row justify-content-center w-100" id = "CovidData">
+
+                            <h4 style="text-align: center; padding-top: 1rem; padding-bottom: 0.5rem;"> Covid Information for <%=endCountryName%></h4>
+                            <div id="chartContainer" style="height: 370px; width: 100%; display: flex;"></div>
+                            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+                            <a href="https://www.cdc.gov/coronavirus/2019-ncov/index.html?s_cid=bb-coronavirus-2019-ncov-NCIRD" title="image of SARS-CoV-2"><img src="http://www.cdc.gov/coronavirus/2019-ncov/images/Coronavirus-badge-300.png" style="width:100%; border:0px;" alt="image of Coronavirus Disease 2019 (COVID-19)"/></a>
+                        </div>
+                        
+
+                        <div class="row justify-content-center overflow-auto" id = "NewsData" style = "max-height: 1240px;">
+                            <h4 style="text-align: center; padding-top: 1rem;"> News for <%=endCountryName%></h4>
+                            <table class="table table-bordered">
+                                <% for(var i = 0; i < news.length; i++) { %>
+                                <tr>
+                                    <td><%= news[i].title %></td>
+                                    <td><a href="<%=news[i].url%>"> <div style="background-image:url(<%=news[i].urlToImage%>); background-size: cover; width: 65px; height: 65px; background-position: center center;" alt="NewsImage"></div></td>
+                                </tr>
+                                <% } %>
+                            </table>
+                        </div>
+                        <div class = "container justify-content-center overflow-auto" id = "POIData" style = "max-height: 1240px;">
+                            <h4 style="text-align: center; padding-top: 1rem;"> Points of Interest</h4>
+                            <div class="row justify-content-center">
+                                <h7 style="padding-bottom: 0.5rem;"> <%=`${whereTo}, ${endCountryName}`%></h7>
+                            </div>
+                            <% for (var i = 0; i < pois.length; i++) { %> 
+                                <% if(pois[i].wikipedia_extracts.html != "<b>No Wikipedia Extract Available</b>") { %> 
+                                    <div class="container border border-secondary">
+                                            <div class="row w-100 abc" style="padding-top: 0.5rem;">
+                                                <div class="col-sm-8"><b><%= pois[i].name%></b><img class="background-image" style="position: absolute; right: 0px; bottom: 0px; width:14px; height: 12px;" src="https://i.imgur.com/xpPn5Ux.png"></div>
+                                                <div class="col-sm-4"> <a href="<%=pois[i].wikipedia%>"><div style="background-image:url(<%=pois[i].preview.source%>); background-size: cover; width: 65px; height: 65px;  background-position: center center;" alt="POIImage"></div></a></div>
+                                            </div>
+                                        
+                                        <div class="row hidden_row w-100" >
+                                            <div class="col-sm-12"><p><%- pois[i].wikipedia_extracts.html %></p></div>
+                                        </div>
+                                    </div>
+                                <% }  %>
+                            <% }  %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // function expandMap() {
+        //     console.log("expand")
+        //     if($("#map").height() == 800) {
+        //         $("#map").height(400)
+        //     }
+        //     else {
+        //         $("#map").height(800)
+        //     }
+        //     map.resize();
+        // }
+
+        var chart;
+        window.onload = function () {
+
+            chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                title:{
+                    text: "Covid Trends"
+                },
+                axisX:{
+                    valueFormatString: "MM/DD/YY",
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                axisY: {
+                    title: "Number of Cases",
+                    includeZero: true,
+                    crosshair: {
+                        enabled: true
+                    }
+                },
+                toolTip:{
+                    shared:true
+                },  
+                legend:{
+                    cursor:"pointer",
+                    verticalAlign: "bottom",
+                    horizontalAlign: "left",
+                    dockInsidePlotArea: true,
+                    itemclick: toogleDataSeries
+                },
+                data: [{
+                    type: "line",
+                    showInLegend: true,
+                    name: "Total Cases",
+                    markerType: "square",
+                    xValueFormatString: "MM/DD/YY",
+                    color: "#F08080",
+                    dataPoints: [<% for (var i=0; i<newCovidData.length; i++){%>
+                                <%-`{x: new Date("${newCovidData[i].x}"), y: ${newCovidData[i].y}}`%>,
+                                <%}%>]
+
+
+                            // [{ x: new Date(2017, 0, 3), y: 650 },
+                            //  { x: new Date(2017, 0, 3), y: 650 }
+                            // ]
+
+                }]
+            });
+            chart.render();
+
+            function toogleDataSeries(e){
+                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    e.dataSeries.visible = false;
+                } else{
+                    e.dataSeries.visible = true;
+                }
+                chart.render();
+            }
+        }
+        var loadState = true; 
+        var select = false;
+        var accFontState = false;
+        var DarkContrast = false;
+        
+        function changeText() {
+            if(!accFontState) {
+                accFontState = true;
+                $("body").css("font-family", "Arial");
+                $("body").css("font-size", "130%");
+                $("input select button").addClass("border border-secondary");
+                
+            }
+            else {
+                accFontState = false;
+                $("body").css("font-family", "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,Liberation Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji");
+                $("body").css("font-size", "110%");
+                $("input select button").removeClass("border border-secondary");
+            }
+        }
+
+        function contrastMode() {
+            if(!DarkContrast) {
+                DarkContrast = true;
+                $("#dark").css("background-color", "black");
+                $("#dark, #dark .btn").not(".toggle-off").css("color", "white");
+                $("#dark").css("font-weight", "bold");
+                $("#accessibility-tab").css("background-color","black")
+                $("#dark").css("border-radius: 20px");
+            }
+            else {
+                DarkContrast = false;
+                $("#dark, #dark .btn").css("color", "");
+                $("#dark").css("background-color", "rgba(245, 245, 230, 0.85)");
+                $("#dark").css("border-radius", "20px")
+                $("#dark").css("font-weight", "normal");
+                $("#accessibility-tab").css("background-color","rgba(128,128,128,1)")
+                $("#dark").css("border-radius: 0px");
+            }
+        }
+
+
+
+        var accFontStateText = <%=`${fontState}`%>;
+        var DarkContrastText = <%=`${darkContrastState}`%>;
+
+        
+            
+        if(accFontStateText == true){
+            changeText();
+            $(document).ready(function(){
+                $("#check1").bootstrapToggle('on');
+            });
+        }     
+        if(DarkContrastText == true){
+            contrastMode();
+            $(document).ready(function(){
+                $("#check2").bootstrapToggle('on');
+            });
+        }
+        
+
+
+        
+
+
+        $(document).ready(function(){
+            $("#accessibility-tab").hide();
+
+
+            $("#submitButton").click(function(){           
+                if(loadState) $("#loading").show();
+            });
+
+            // if(document.readyState == 'complete') {
+            //     $("#loading").hide();
+            // }
+            
+            $("#access-toggle").click(function(){
+                console.log(select);
+                if(!select){
+                    $("#access-toggle").css("padding-bottom","20px");
+                    if(DarkContrast) {
+                        $("#accessibility-tab").css("background-color","transparent")
+                    } else {
+                        $("#accessibility-tab").css("background-color","rgba(128,128,128,1)")
+                    }
+                    select = true;
+                }
+                else{
+                    $("#access-toggle").css("padding-bottom","0px");
+                    select = false;
+                } 
+                $("#accessibility-tab").toggle(500);
+            });
+        });
+
+
+        $("#access-option-1").click(changeText);
+        $("#access-option-2").click(contrastMode);
+
+
+        $(".abc").click(function() {
+            $(this).next('div').toggle();
+            
+        });
+        $(document).ready(function(){
+            $("#CovidData").hide();
+            $("#NewsData").hide();
+            $("#POIData").hide();
+
+            $("#WeatherBox").click(function(){
+                console.log("weather")
+                $("#CovidData").hide();
+                $("#NewsData").hide();
+                $("#WeatherData").show();
+                $("#POIData").hide();
+            });
+
+            $("#CovidBox").click(function(){
+                console.log("covid")
+
+                $("#CovidData").show();
+                $("#NewsData").hide();
+                $("#WeatherData").hide();
+                $("#POIData").hide();
+
+                chart.render();
+            });
+
+            $("#NewsBox").click(function(){
+                console.log("news")
+                $("#CovidData").hide();
+                $("#NewsData").show();
+                $("#WeatherData").hide();
+                $("#POIData").hide();
+
+            });
+            $("#POIBox").click(function(){
+                console.log("POI")
+                $("#CovidData").hide();
+                $("#NewsData").hide();
+                $("#WeatherData").hide();
+                $("#POIData").show();
+            });
+
+        });
+        var autocomplete;
+        var autocomplete2;
+        function activatePlacesSearch(){
+            var input = document.getElementById('WhereFrom');
+            autocomplete = new google.maps.places.Autocomplete(input);
+            var input2 = document.getElementById('WhereTo');
+            autocomplete2 = new google.maps.places.Autocomplete(input2);
+        }
+        
+        function test(btn) {
+            // var val = btn.form.querySelector('input[name="WhereFrom"]').value;
+            // alert(val);
+
+            if((typeof(autocomplete.getPlace()) == "undefined")
+            || (typeof(autocomplete2.getPlace()) == "undefined")
+            || startDate == ""
+            || numTravelers == ""
+            || currency == ""
+            ) {
+                loadState = false;
+                alert("You are missing a field!");
+                return
+            }else loadState = true;
+            
+            var startAddress = autocomplete.getPlace().formatted_address;
+            var endAddress = autocomplete2.getPlace().formatted_address;
+            var startDate = document.getElementById("StartDate").value;
+            var endDate = document.getElementById("EndDate").value;
+            var numTravelers = document.getElementById("NumTravelers").value;
+            var currency = document.getElementById("Currency").value;
+
+            console.log(autocomplete);
+            //console.log(autocomplete.gm_accessors_.place.Ve.place.geometry.location.lng());
+
+
+
+            var startLat = autocomplete.getPlace().geometry.location.lat();
+            var startLng = autocomplete.getPlace().geometry.location.lng();
+            var endLat = autocomplete2.getPlace().geometry.location.lat();
+            var endLng = autocomplete2.getPlace().geometry.location.lng();
+
+            var startCity = autocomplete.getPlace().name;
+            var endCity = autocomplete2.getPlace().name;
+
+            var startAddrComponents = autocomplete.getPlace().address_components;
+            var startCountry;
+            var startCountryName;
+
+
+            for(var i=0; i<startAddrComponents.length; i++) {
+                if (startAddrComponents[i].types.includes("country")) {
+                    startCountry = startAddrComponents[i].short_name;
+                    startCountryName = startAddrComponents[i].long_name;
+                }
+            }
+
+            var endAddrComponents = autocomplete2.getPlace().address_components;
+            var endCountry;
+            var endCountryName;
+
+
+            for(var i=0; i<endAddrComponents.length; i++) {
+                if (endAddrComponents[i].types.includes("country")) {
+                    endCountry = endAddrComponents[i].short_name;
+                    endCountryName = endAddrComponents[i].long_name;
+                }
+            }
+
+            var fontState = "false"
+            var darkContrastState = "false"
+            if(accFontState) fontState = "true";
+            if(DarkContrast) darkContrastState = "true";
+            var newURL = "/main";
+            newURL += `?originCity=${startCity}`
+            newURL += `&originLat=${startLat}`
+            newURL += `&originLng=${startLng}`
+            newURL += `&originCountry=${startCountry}`
+            newURL += `&destCity=${endCity}`
+            newURL += `&destLat=${endLat}`
+            newURL += `&destLng=${endLng}`
+            newURL += `&destCountry=${endCountry}`
+            newURL += `&currency=${currency}`
+            newURL += `&numTravelers=${numTravelers}`
+            newURL += `&startDate=${startDate}`
+            newURL += `&startAddress=${startAddress}`
+            newURL += `&endAddress=${endAddress}`
+            newURL += `&fontState=${fontState}`
+            newURL += `&darkContrastState=${darkContrastState}`
+            newURL += `&startCountryName=${startCountryName}`
+            newURL += `&endCountryName=${endCountryName}`
+            
+            if(endDate == "") {
+                if(confirm('You have not filled in "End Date" field. Round trip flights will not be included. Would you like to continue?')) {
+                    $("#loading").show();
+                    newURL += `&endDate=${endDate}`
+
+                } else {
+                    loadState = false;
+                    $("#loading").hide();
+                    console.log('User did not continue.');
+                    return;
+                }
+            }else {
+                newURL += `&endDate=${endDate}`
+            }
+            window.location = origin + newURL;
+
+        }
+
+    </script>
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=REDACTED&libraries=places&callback=activatePlacesSearch&types=(cities)">
+    </script>
+
+</body>
+
+</html>

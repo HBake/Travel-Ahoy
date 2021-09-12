@@ -1,0 +1,26 @@
+{
+  "name": "travelahoy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.tamu.edu/hbake/Project3-Group2"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "airport-codes": "^1.0.2",
+    "bootstrap-select": "^1.13.18",
+    "bootstrap-toggle": "^2.2.2",
+    "currency-converter": "^0.1.12",
+    "currency-converter-lt": "^1.1.1",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "unirest": "^0.6.0"
+  }
+}

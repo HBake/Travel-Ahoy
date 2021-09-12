@@ -1,0 +1,220 @@
+<html>
+
+    <head>
+        <script src="node_modules/jquery/dist/jquery.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+        <title>Travel Ahoy!</title>
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script> 
+        <meta charset="UTF-8">
+        
+        <link rel="stylesheet" type="text/css" href ="node_modules/nicecountryinput-master/niceCountryInput.css">
+        <script src="node_modules/nicecountryinput-master/niceCountryInput.js"></script>
+    </head>
+    
+
+    <body>
+        <style>
+            body {
+                background-image: url("public/Webpage_background_1.jpg");
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-position: center;
+                background-size: cover;
+            }
+            
+        </style>
+        
+        <!-- This is the where The actual website is being designed -->
+        <div class="container-fluid">
+
+            <!-- First Row -->
+            <div class="row justify-content-center">
+                <div class="col-lg-2 border">
+                    <a href="index.html">
+                        <img src=Logo_Transparent.png alt="Travel Ahoy Logo" style="width: 100%; display: block; margin-left: auto; margin-right: auto;">
+                    </a>                         
+                </div>
+                <div class="col-lg-7 border align-self-center">
+                    <h1 style="text-align: center;">Travel Ahoy<h1>
+                </div> 
+                <div class = "col-lg-3 border"></div>
+            </div>
+
+            <!-- Second Row -->
+            <div class="row">
+                <!-- This is the far left column -->
+                <div class="col-lg-1 border">
+                    left column
+                </div>
+                <!-- This is the middle column -->
+                <div class="col-lg-9 border" style="background-color: rgb(197, 196, 196);">
+                    Middle Column
+                    <!-- First Row of Middle Column: Info of: Where From, Where to, Country -->
+                    <form>
+                        <div class="form-row justify-content-center">
+                            <div class="col-lg-2 border">
+                                <div class="form-group mb-3">
+                                    <label for="WhereFrom">Where From:</label>
+                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">  
+                                </div>
+                            </div>
+                            <div class="col-lg-2 border">
+                                <div class="form-group mb-3">
+                                    <label for="WhereTo"> Where To:</label>
+                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                            <div class="col-lg-2 border">
+                                <div class ="form-group mb-3">
+                                    <label for="addressCountry">Country</label>
+                                    <select class = "custom-select" id="inputGroupSelect04" aria-label="Currency Select" name="addressCountry">
+                                        <option value="none">...</option>
+                                        <option value="GB">United Kingdom</option>
+                                        <option value="AL">Albania</option>
+                                        <option value="AD">Andorra</option>
+                                        <option value="AT">Austria</option>
+                                        <option value="BY">Belarus</option>
+                                        <option value="BE">Belgium</option>
+                                        <option value="BA">Bosnia and Herzegovina</option>
+                                        <option value="BG">Bulgaria</option>
+                                        <option value="HR">Croatia (Hrvatska)</option>
+                                        <option value="CY">Cyprus</option>
+                                        <option value="CZ">Czech Republic</option>
+                                        <option value="FR">France</option>
+                                        <option value="GI">Gibraltar</option>
+                                        <option value="DE">Germany</option>
+                                        <option value="GR">Greece</option>
+                                        <option value="VA">Holy See (Vatican City State)</option>
+                                        <option value="HU">Hungary</option>
+                                        <option value="IT">Italy</option>
+                                        <option value="LI">Liechtenstein</option>
+                                        <option value="LU">Luxembourg</option>
+                                        <option value="MK">Macedonia</option>
+                                        <option value="MT">Malta</option>
+                                        <option value="MD">Moldova</option>
+                                        <option value="MC">Monaco</option>
+                                        <option value="ME">Montenegro</option>
+                                        <option value="NL">Netherlands</option>
+                                        <option value="PL">Poland</option>
+                                        <option value="PT">Portugal</option>
+                                        <option value="RO">Romania</option>
+                                        <option value="SM">San Marino</option>
+                                        <option value="RS">Serbia</option>
+                                        <option value="SK">Slovakia</option>
+                                        <option value="SI">Slovenia</option>
+                                        <option value="ES">Spain</option>
+                                        <option value="UA">Ukraine</option>
+                                        <option value="DK">Denmark</option>
+                                        <option value="EE">Estonia</option>
+                                        <option value="FO">Faroe Islands</option>
+                                        <option value="FI">Finland</option>
+                                        <option value="GL">Greenland</option>
+                                        <option value="IS">Iceland</option>
+                                        <option value="IE">Ireland</option>
+                                        <option value="LV">Latvia</option>
+                                        <option value="LT">Lithuania</option>
+                                        <option value="NO">Norway</option>
+                                        <option value="SJ">Svalbard and Jan Mayen Islands</option>
+                                        <option value="SE">Sweden</option>
+                                        <option value="CH">Switzerland</option>
+                                        <option value="TR">Turkey</option>
+                                    </select>          
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Second Row of Middle Column: Info of: Start Date, End Date, Max Traveler, Max Cost, and Currency -->
+                    <form>
+                        <div class="form-row justify-content-center">
+                            <div class="col-lg-2 border">
+                                <div class="form-group mb-3">
+                                    <label for = "StartDate">Start Date:</label>
+                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">  
+                                </div>
+                            </div>
+                            <div class="col-lg-2 border">
+                                <div class="form-group mb-3">
+                                    <label for = "EndDate">End Date:</label>
+                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">  
+                                </div>
+                            </div>
+                            <div class="col-lg-2 border">
+                                <div class="from-group mb-3">
+                                    <label for = "MaxTravelers">Max Travelers</label>
+                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">  
+                                </div>
+                            </div>
+                            <div class="col-lg-2 border">
+                                <div class="form-group mb-3">
+                                    <label for = "MaxCost"> Max Cost</label>
+                                    <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">  
+                                </div>
+                            </div>
+                            <div class="col-lg-1 border">
+                                <div class ="form-group mb-3">
+                                    <label for = "Currency"> Currency </label>
+                                    <select class = "custom-select" id="inputGroupSelect04" aria-label="Currency Select">
+                                        <option selected>...</option>
+                                        <option value="1">€</option>
+                                        <option value="2">$</option>
+                                        <option value="3">£</option>
+                                        <option value="4">¥</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="col-lg-3 border my-auto">
+                                <a href = "main.html" >
+                                    <button type="button" class="btn btn-primary btn-lg btn-block">
+                                        Submit
+                                    </button> 
+                                </a> 
+                            </div>
+                        </div>
+                    </form>
+                   
+                    <form>
+                        <!-- Fastest -->
+                        <div class="form-row">
+                            <div class="col-lg-12 border">
+                                stuff
+                            </div>
+                        </div>
+                        <!-- Cheapest -->
+                        <div class="form-row">
+                            <div class="col-lg-12 border">
+                                stuff
+                            </div>
+                        </div>
+                        <!-- Map -->
+                        <div class="form-row">
+                            <div class="col-lg-12 border">
+                                <div id='map' style='width: 100%; height: 300px;'></div>
+                                <script>
+                                    mapboxgl.accessToken = 'pk.eyJ1IjoiYWFyaXNoMTMiLCJhIjoiY2tuOWt6a3QyMTh3bDMxcGhhNDhrMXZuaiJ9.PE9GONmYF7nBXJgX4wnwvw';
+                                    var map = new mapboxgl.Map({
+                                    container: 'map',
+                                    style: 'mapbox://styles/mapbox/streets-v11'
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <!-- This is the far right column -->
+                <div class="col-lg-2 border">
+                    Right column
+                    <div class="row">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
